@@ -42,7 +42,55 @@ Future<void> main() async {
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
 
-  /// Run the `FlutterTemplateApp` app
+  final name = dotenv.env['IS_APP_ONE']!;
+
+  final bool isAppOneFlag;
+  if (String.fromEnvironment(name) == 'true') {
+    isAppOneFlag = true;
+  } else {
+    if (String.fromEnvironment(name) == 'false') {
+      isAppOneFlag = false;
+    } else {
+      isAppOneFlag = true;
+    }
+  }
+
+  if (isAppOneFlag) {
+    runApp(
+      ProviderScope(
+        observers: [ProvidersLogger()],
+        overrides: [
+          storageServiceProvider.overrideWithValue(hiveStorageService),
+          deviceInfoServiceProvider.overrideWithValue(deviceInfoService),
+        ],
+        child: EasyLocalization(
+          supportedLocales: const [Locale('en'), Locale('hr')],
+          path: 'assets/translations',
+          useOnlyLangCode: true,
+          fallbackLocale: const Locale('en'),
+          child: AppOne(),
+        ),
+      ),
+    );
+  } else {
+    runApp(
+      ProviderScope(
+        observers: [ProvidersLogger()],
+        overrides: [
+          storageServiceProvider.overrideWithValue(hiveStorageService),
+          deviceInfoServiceProvider.overrideWithValue(deviceInfoService),
+        ],
+        child: EasyLocalization(
+          supportedLocales: const [Locale('en'), Locale('hr')],
+          path: 'assets/translations',
+          useOnlyLangCode: true,
+          fallbackLocale: const Locale('en'),
+          child: AppTwo(),
+        ),
+      ),
+    );
+  }
+
   runApp(
     ProviderScope(
       observers: [ProvidersLogger()],
@@ -55,15 +103,15 @@ Future<void> main() async {
         path: 'assets/translations',
         useOnlyLangCode: true,
         fallbackLocale: const Locale('en'),
-        child: FlutterTemplateApp(),
+        child: AppOne(),
       ),
     ),
   );
 }
 
 /// Starting point of our Flutter application
-class FlutterTemplateApp extends StatelessWidget {
-  FlutterTemplateApp({super.key});
+class AppOne extends StatelessWidget {
+  AppOne({super.key});
 
   AppRouter? router;
 
@@ -76,7 +124,37 @@ class FlutterTemplateApp extends StatelessWidget {
             router ??= AppRouter(ref);
 
             return MaterialApp.router(
-              onGenerateTitle: (_) => 'appName'.tr(),
+              onGenerateTitle: (_) => 'APP ONE',
+              debugShowCheckedModeBanner: false,
+              routerDelegate: router!.appRouter.routerDelegate,
+              routeInformationParser: router!.appRouter.routeInformationParser,
+              routeInformationProvider: router!.appRouter.routeInformationProvider,
+              theme: AppThemes.primary(),
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: ref.watch(localeProvider).toLocale(),
+            );
+          },
+        ),
+      );
+}
+
+//create app two
+class AppTwo extends StatelessWidget {
+  AppTwo({super.key});
+
+  AppRouter2? router;
+
+  @override
+  Widget build(BuildContext context) => ScreenUtilInit(
+        /// Size of the device the designer uses in their designs on Figma
+        designSize: const Size(412, 732),
+        builder: (_, __) => Consumer(
+          builder: (context, ref, child) {
+            router ??= AppRouter2(ref);
+
+            return MaterialApp.router(
+              onGenerateTitle: (_) => 'APP TWO',
               debugShowCheckedModeBanner: false,
               routerDelegate: router!.appRouter.routerDelegate,
               routeInformationParser: router!.appRouter.routeInformationParser,

@@ -55,3 +55,48 @@ class AppRouter {
         ],
       );
 }
+
+class AppRouter2 {
+  AppRouter2(WidgetRef ref) {
+    appRouter = _getAppRouter(ref);
+  }
+
+  /// Use this for testing to change the initial
+  /// location and quickly access some page
+  @visibleForTesting
+  String setInitialLocation(String location) => initialLocation = location;
+
+  late GoRouter appRouter;
+  static String initialLocation = RoutePaths.home;
+
+  GoRouter _getAppRouter(WidgetRef ref) => GoRouter(
+        initialLocation: initialLocation,
+        debugLogDiagnostics: true,
+        errorBuilder: (context, state) => const NotFoundPage(),
+        routes: [
+          GoRoute(
+            path: RoutePaths.home,
+            name: RouteNames.home,
+            builder: (context, state) => HomePage(
+              key: state.pageKey,
+            ),
+            routes: [
+              GoRoute(
+                path: '${RoutePaths.detail}/:id',
+                name: RouteNames.detail,
+                builder: (context, state) {
+                  final movie = state.extra as Movie?;
+
+                  return DetailPage(
+                    args: DetailPageArgs(
+                      id: state.pathParameters['id'],
+                      movie: movie,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      );
+}

@@ -1,58 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'router/test_router.dart';
+
 void main() {
   // Set the flag to determine which router to use
   bool useFirstRouter = true;
 
-  runApp(MyApp(useFirstRouter: useFirstRouter));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool useFirstRouter;
-
-  MyApp({required this.useFirstRouter});
+  const MyApp();
 
   @override
-  Widget build(BuildContext context) {
-    final router = useFirstRouter ? firstRouter() : secondRouter();
-
-    return MaterialApp.router(
-      title: 'Multi Router Example',
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
-    );
-  }
-
-  GoRouter firstRouter() => GoRouter(
-        initialLocation: '/first',
-        errorPageBuilder: (context, state) => const MaterialPage(child: Scaffold(body: Center(child: Text('Error')))),
-        routes: [
-          GoRoute(
-            path: '/first',
-            builder: (context, state) => FirstHomePage(),
-          ),
-          GoRoute(
-            path: '/firstPage',
-            builder: (context, state) => FirstPage(),
-          ),
-        ],
-      );
-
-  GoRouter secondRouter() => GoRouter(
-        initialLocation: '/second',
-        errorPageBuilder: (context, state) => const MaterialPage(child: Scaffold(body: Center(child: Text('Error')))),
-        routes: [
-          GoRoute(
-            path: '/second',
-            builder: (context, state) => SecondHomePage(),
-          ),
-          GoRoute(
-            path: '/secondPage',
-            builder: (context, state) => SecondPage(),
-          ),
-        ],
+  Widget build(BuildContext context) => MaterialApp.router(
+        title: 'Multi Router Example',
+        routerDelegate: router.routerDelegate,
+        routeInformationParser: router.routeInformationParser,
+        routeInformationProvider: router.routeInformationProvider,
       );
 }
 
@@ -61,14 +27,14 @@ class FirstHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('GoRouter First Home Page'),
+          title: const Text('Main App 1'),
         ),
         body: Center(
           child: ElevatedButton(
             onPressed: () {
               GoRouter.of(context).go('/firstPage');
             },
-            child: const Text('Go to GoRouterFirst Page'),
+            child: const Text('Main App 1'),
           ),
         ),
       );
@@ -79,14 +45,14 @@ class SecondHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('GoRouter Second Home Page'),
+          title: const Text('DRC App 1'),
         ),
         body: Center(
           child: ElevatedButton(
             onPressed: () {
               GoRouter.of(context).go('/secondPage');
             },
-            child: const Text('Go to GoRouter Second Page'),
+            child: const Text('DRC App 1'),
           ),
         ),
       );
@@ -97,10 +63,21 @@ class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('First Page'),
+          title: const Text('Main App 2'),
         ),
-        body: const Center(
-          child: Text('This is the First Page'),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Center(
+              child: Text('Main App 2'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.go('/main');
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
         ),
       );
 }
@@ -110,10 +87,21 @@ class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Second Page'),
+          title: const Text('DRC App 2'),
         ),
-        body: const Center(
-          child: Text('This is the Second Page'),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Center(
+              child: Text('DRC App 2'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.go('/drc');
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
         ),
       );
 }

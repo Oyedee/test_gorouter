@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class BottomNavScaffold extends StatefulWidget {
-  const BottomNavScaffold({required this.child, super.key});
+class DRCBottomNavScaffold extends StatefulWidget {
+  const DRCBottomNavScaffold({required this.child, super.key});
   final Widget child;
 
   @override
-  State<BottomNavScaffold> createState() => _BottomNavScaffoldState();
+  State<DRCBottomNavScaffold> createState() => _DRCBottomNavScaffoldState();
 }
 
-class _BottomNavScaffoldState extends State<BottomNavScaffold> {
+class _DRCBottomNavScaffoldState extends State<DRCBottomNavScaffold> {
   int currentIndex = 0;
-
   @override
   Widget build(BuildContext context) => Scaffold(
         body: widget.child,
@@ -29,13 +28,13 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
   void changeTab(int index) {
     switch (index) {
       case 0:
-        context.go('/main');
+        context.go('/drc');
         break;
       case 1:
-        context.go('/firstPage');
+        context.go('/secondPage');
         break;
       default:
-        context.go('/main');
+        context.go('/drc');
         break;
     }
     setState(() {
